@@ -42,6 +42,8 @@ function get-accesstoken {
     [CmdletBinding()]
     param($ClientID, $redirectURL, $clientSecret, $tenantID)
 
+#very basic - minimal error handling
+
     $getaccesstokenerr = $null
 
     try {
@@ -66,7 +68,8 @@ function get-accesstoken {
     
 }
 function get-authheader {
-    
+    #stores AuthHeader in global variable '$authHeader'
+    #very basic - minimal error handling
 
     $accesstoken = Get-AccessToken -ClientID $global:AppID -redirectURL $global:AppRedirectURI -clientSecret $global:AppSecret -tenantID $Global:TenantID
 
@@ -99,6 +102,9 @@ function get-mailReadViaGAPI{
         $AccountGUIDorUPN
     )
 
+    #reads email messages - Basic - first 'pull' only, implement @odata.nextlink in production or for more messages
+    #basic - no error handling or pre-check for authHeader time
+
     [URI]$URI = "https://graph.microsoft.com/beta/users/$($AccountGUIDorUPN)/messages"
     Invoke-RestMethod -Method Get -Uri $URI.AbsoluteUri -Headers $authHeader -ContentType "application/json"
 
@@ -111,8 +117,11 @@ function get-mailboxSettingsViaGAPI{
         $UserGUID
     )
 
-    $URL = "https://graph.microsoft.com/beta/users/$($UserGuid)/mailboxSettings"
-    Invoke-RestMethod -Method Get -Uri $url -Headers $authHeader -ContentType "application/json"
+    #retrieves Mailbox Settings
+    #basic - no error handling or pre-check for authHeader time
+
+    [uri]$URI = "https://graph.microsoft.com/beta/users/$($UserGuid)/mailboxSettings"
+    Invoke-RestMethod -Method Get -Uri $URI.AbsoluteUri -Headers $authHeader -ContentType "application/json"
 
 }
 function new-sendEmailViaGAPI{
@@ -190,7 +199,7 @@ $negativeTestResult = get-mailboxSettingsViaGAPI -UserGUID '~Fill in User GUID o
 # "code": "ErrorAccessDenied",
 # "message": "Access to OData is disabled."
 
-$falseUnsupportedErrorResult = get-mailboxSettingsViaGAPI -UserGUID '~Fill in User GUID or UPN of account with mailbox license~'
+$falseUnsupportedErrorResult = get-mailboxSettingsViaGAPI -UserGUID '~Fill in User GUID or UPN of account without mailbox license, but has AAD Account~'
 # --------------------------------------------
 #Returns
 # "code": "MailboxNotEnabledForRESTAPI",
