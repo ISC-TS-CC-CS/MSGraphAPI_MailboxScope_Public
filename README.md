@@ -9,6 +9,7 @@ get-EXOScopedInfo.ps1 - Examples of retrieving Mailbox Information using GraphAP
 settings.json - App/Tenant Specific Information used in get-EXOScopedINfo.ps1
 
 Steps:
+
     1. Azure Admin - Create Azure App with expected security permissions (see get-EXOScopedInfo.ps1 header)
 
     2. Azure Admin - Create mail-enabled Security Group
